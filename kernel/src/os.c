@@ -1,6 +1,6 @@
 #include <common.h>
 #define task_alloc() pmm->alloc(sizeof(task_t))
-//#define TEST1
+#define TEST1
 //#define TEST2
 //#define TEST3
 #ifdef TEST1
