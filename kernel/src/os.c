@@ -43,14 +43,14 @@ static void tty_reader(void *arg) {
 
 
 
-
+extern int uproc_create(task_t *task, const char *name);
 
 static void os_init() {
   pmm->init();
   kmt->init();
   uproc->init();
   #ifdef TEST3
-  uproc->create(task_alloc(),"init");
+  uproc_create(task_alloc(),"init");
   #endif
   #ifdef TEST2
   dev->init();

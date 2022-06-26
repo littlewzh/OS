@@ -110,7 +110,7 @@ static void uproc_init(){
     os->on_irq(0,EVENT_SYSCALL,   syscall);
 
 }
-static int uproc_create(task_t *task, const char *name){
+int uproc_create(task_t *task, const char *name){
     kmt->spin_lock(&traplock);
     task->name=(char *)name;
     task->stack=kalloc_safe(STACK_SIZE);
@@ -139,7 +139,6 @@ static int uproc_create(task_t *task, const char *name){
 
 MODULE_DEF(uproc) = {
     .init   = uproc_init,
-    .create = uproc_create,
     .kputc  = uproc_kputc,
     .getpid = uproc_getpid,
     .sleep  = uproc_sleep,
