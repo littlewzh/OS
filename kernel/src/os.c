@@ -1,8 +1,8 @@
 #include <common.h>
 #define task_alloc() pmm->alloc(sizeof(task_t))
-//#define TEST1
+#define TEST1
 //#define TEST2
-#define TEST3
+//#define TEST3
 #ifdef TEST1
 sem_t empty, fill;
 
@@ -111,6 +111,7 @@ static Context *os_trap(Event ev, Context *ctx){
     if(handler[i].event==EVENT_NULL || handler[i].event==ev.event) handler[i].call(ev,ctx);
   }
   //choose the next task event
+  kmt->spin_lock(&traplock);
   if(task_head==NULL) {task_cpu[id]->status=RUNNING;next=task_cpu[id]->ctx;}
   else{
     if(round==NULL ){
@@ -134,7 +135,7 @@ static Context *os_trap(Event ev, Context *ctx){
       next=round->ctx;
     }
   }
-  //kmt->spin_unlock(&traplock);
+  kmt->spin_unlock(&traplock);
   return next;
 }
 static void os_on_irq(int seq,int ev,handler_t fun){
