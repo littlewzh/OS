@@ -17,11 +17,9 @@ static int uproc_sleep(task_t *task, int seconds){
     //printf("%d\n",seconds);
     uint64_t wakeup = io_read(AM_TIMER_UPTIME).us + 1000000L*seconds;
     while(io_read(AM_TIMER_UPTIME).us < wakeup){
-        kmt->spin_unlock(&traplock);
         printf("%d   %d\n",io_read(AM_TIMER_UPTIME).us,wakeup);
         yield();
     }
-    kmt->spin_lock(&traplock);
     return 0;
 }
 static int64_t uproc_uptime(task_t *task){

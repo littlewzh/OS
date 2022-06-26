@@ -97,7 +97,7 @@ static Context *os_trap(Event ev, Context *ctx){
   assert(ienabled() == false); //to promise the interrupt closed
   Context *next=NULL;
   int id=cpu_current();
-  kmt->spin_lock(&traplock);
+  //kmt->spin_lock(&traplock);
   if(task_cpu[id]==NULL){
     task_cpu[id]=&task_boot[id];
     task_cpu[id]->ctx=ctx;
@@ -134,7 +134,7 @@ static Context *os_trap(Event ev, Context *ctx){
       next=round->ctx;
     }
   }
-  kmt->spin_unlock(&traplock);
+  //kmt->spin_unlock(&traplock);
   return next;
 }
 static void os_on_irq(int seq,int ev,handler_t fun){
