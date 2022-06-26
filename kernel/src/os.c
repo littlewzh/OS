@@ -1,8 +1,8 @@
 #include <common.h>
 #define task_alloc() pmm->alloc(sizeof(task_t))
-#define TEST1
+//#define TEST1
 //#define TEST2
-//#define TEST3
+#define TEST3
 #ifdef TEST1
 sem_t empty, fill;
 
@@ -48,7 +48,7 @@ static void tty_reader(void *arg) {
 static void os_init() {
   pmm->init();
   kmt->init();
-  //uproc->init();
+  uproc->init();
   #ifdef TEST3
   uproc->create(task_alloc(),"init");
   #endif
