@@ -16,6 +16,7 @@ static int uproc_getpid(task_t *task){
 static int uproc_sleep(task_t *task, int seconds){
     uint64_t wakeup = io_read(AM_TIMER_UPTIME).us + 1000000L*seconds;
     while(io_read(AM_TIMER_UPTIME).us < wakeup){
+        printf("check\n");
         yield();
     }
     return 0;
