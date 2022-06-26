@@ -63,6 +63,7 @@ static Context *pagefault(Event ev,Context *ctx){
 }
 static Context *syscall(Event ev,Context *ctx){
     void *ret=NULL;
+    kmt->spin_unlock(&traplock);
     iset(true);
     assert(ev.event==EVENT_SYSCALL);
     switch (ctx->GPRx){
