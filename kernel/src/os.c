@@ -50,7 +50,8 @@ static void os_init() {
   kmt->init();
   uproc->init();
   #ifdef TEST3
-  uproc_create(task_alloc(),"init");
+  uproc_create(task_alloc(),"init1");
+  uproc_create(task_alloc(),"init2");
   #endif
   #ifdef TEST2
   dev->init();
