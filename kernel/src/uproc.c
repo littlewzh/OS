@@ -64,11 +64,11 @@ static int uproc_fork(task_t *task){
     uproc_create(child,"child");
     void *cr3=child->ctx->cr3;
     uintptr_t rsp0=child->ctx->rsp0;
-
-    child->ctx=task->ctx;
+    memcpy(child->ctx,task->ctx,sizeof(Context));
+    //child->ctx=task->ctx;
     child->ctx->cr3=cr3;
     child->ctx->rsp0=rsp0;
-    //memcpy(child->ctx,task->ctx,sizeof(Context));
+    
     child->ctx->GPRx=0;
     child->np=task->np;
     for(int i=0;i< task->np;i++){
