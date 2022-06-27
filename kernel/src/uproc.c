@@ -75,6 +75,7 @@ static int uproc_fork(task_t *task){
         child->pa[i]=new_pa;
         map(&child->as,va,new_pa,MMAP_READ | MMAP_WRITE);
     }
+    printf("\n%d\n",child->pid);
     return child->pid;
 }
 static int uproc_wait(task_t *task, int *status){
