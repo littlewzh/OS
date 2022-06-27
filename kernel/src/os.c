@@ -117,14 +117,19 @@ static Context *os_trap(Event ev, Context *ctx){
     if(round==NULL ){
       round=task_head;
     }
+    else if(round==task_head){
+      round=NULL;
+    }
     else{
       if(round->next == NULL) {round=task_head;}
       else{round=round->next;}
     }
-    while(round->status != RUNABLE ){
+    if(round!=NULL){
+      while(round->status != RUNABLE ){
       //if(round->next == NULL){round=task_head;continue;}
       round=round->next;
       if(round==NULL) break;
+      }
     }
     //printf("the thread %s status is %d\n",round->name,round->status);
     if(round==NULL){task_cpu[id]=&task_boot[id];task_cpu[id]->status=RUNNING;next=task_boot[id].ctx;}
