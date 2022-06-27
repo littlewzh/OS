@@ -89,7 +89,13 @@ static Context *syscall(Event ev,Context *ctx){
             break;
         }
         case SYS_sleep:{
-            uproc_sleep(task_cpu[cpu_current()],ctx->GPR1);
+            //uproc_sleep(task_cpu[cpu_current()],ctx->GPR1);
+            uint64_t wakeup = io_read(AM_TIMER_UPTIME).us + 1000000L*ctx->GPR1;//seconds;
+            while(io_read(AM_TIMER_UPTIME).us < wakeup){
+                printf("%d   %d\n",io_read(AM_TIMER_UPTIME).us,wakeup);
+                yield();
+            }
+            task_cpu[cpu_current()]->status=RUNABLE;
             break;
         }
         case SYS_uptime:{
