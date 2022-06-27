@@ -15,6 +15,9 @@ struct task {
   char *name;
   uint32_t pid;
   //uint8_t flag[8];
+  void* va[64];
+  void* pa[64];
+  int np;
   struct task *next;
   AddrSpace as;
   void *stack;

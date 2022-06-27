@@ -7,7 +7,7 @@ extern task_t *task_head;
 extern task_t *task_cpu[8]; 
 extern sleep_t sleep_head;
 static uint32_t process_pid;
-
+int uproc_create(task_t *task, const char *name);
 static int uproc_kputc(task_t *task, char ch) {
   putch(ch); // safe for qemu even if not lock-protected
   return 0;
@@ -60,7 +60,22 @@ static int64_t uproc_uptime(task_t *task){
 }
 static int uproc_fork(task_t *task){
 
-    return 0;
+    task_t *child=kalloc_safe(sizeof(task_t));
+    uproc_create(child,"child");
+    memcpy(child->ctx,task->ctx,sizeof(Context));
+    child->ctx->GPRx=0;
+    child->np=task->np;
+    for(int i=0;i< task->np;i++){
+        int sz=task->as.pgsize;
+        void *va=task->va[i];
+        void *pa=task->pa[i];
+        void *new_pa=kalloc_safe((size_t)sz);
+        memcpy(new_pa,pa,(size_t)sz);
+        child->va[i]=va;
+        child->pa[i]=new_pa;
+        map(&child->as,va,new_pa,MMAP_READ | MMAP_WRITE);
+    }
+    return child->pid;
 }
 static int uproc_wait(task_t *task, int *status){
     return 0;
@@ -85,7 +100,9 @@ static Context *pagefault(Event ev,Context *ctx){
     AddrSpace *as = &(task_cpu[cpu_current()]->as);
     void *pa = kalloc_safe((size_t)as->pgsize);
     void *va = (void *)(ev.ref & ~(as->pgsize-1L));
-
+    task_cpu[cpu_current()]->va[task_cpu[cpu_current()]->np]=va;
+    task_cpu[cpu_current()]->pa[task_cpu[cpu_current()]->np]=pa;
+    task_cpu[cpu_current()]->np++;
     if(va == as->area.start) {
         //printf("loader\n");
         memcpy(pa,_init,_init_len);
@@ -110,7 +127,7 @@ static Context *syscall(Event ev,Context *ctx){
             break;
         }
         case SYS_fork:{
-            uproc_fork(task_cpu[cpu_current()]);
+            ctx->GPRx=uproc_fork(task_cpu[cpu_current()]);
             break;
         }
         case SYS_getpid:{
@@ -158,6 +175,7 @@ int uproc_create(task_t *task, const char *name){
     task->name=(char *)name;
     task->stack=kalloc_safe(STACK_SIZE);
     task->pid=(++process_pid);
+    task->np=0;
     panic_on(process_pid>32760,"the pid number is too large");
     Area ustack={.start=task->stack,.end=(void *)((uintptr_t)(task->stack)+STACK_SIZE)};
     protect(&task->as);
