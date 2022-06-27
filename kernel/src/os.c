@@ -102,10 +102,12 @@ static Context *os_trap(Event ev, Context *ctx){
     task_cpu[id]=&task_boot[id];
     task_cpu[id]->ctx=ctx;
     task_cpu[id]->status=RUNNING;
+    task_cpu[id]->name="boot/";
   }
   else{
     task_cpu[id]->ctx=ctx;
   }
+  printf("%s\n",task_cpu[id]->name);
   if(task_cpu[id]->status != BLOCKED) task_cpu[id]->status=RUNABLE;
   for(int i=0;i<handler_sum;i++){
     if(handler[i].event==EVENT_NULL || handler[i].event==ev.event) handler[i].call(ev,ctx);
