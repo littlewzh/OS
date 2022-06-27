@@ -4,7 +4,7 @@
 #define RUNABLE 0
 #define RUNNING 1
 #define BLOCKED 2
-#define STACK_SIZE 4096
+#define STACK_SIZE 8192
 
 void *kalloc_safe(size_t size);
 void kfree_safe(void *ptr);
