@@ -63,9 +63,6 @@ static void os_init() {
 }
 
 
-
-
-
 static void os_run() {
   iset(true);                            //the interrupt is allowed
   /*for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
@@ -73,11 +70,6 @@ static void os_run() {
   }*/
   while (1) ;
 }
-
-
-
-
-
 
 
 struct callback{
