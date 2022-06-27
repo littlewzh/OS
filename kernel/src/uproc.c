@@ -5,6 +5,7 @@
 extern spinlock_t traplock;
 extern task_t *task_head;
 extern task_t *task_cpu[8]; 
+extern sleep_t sleep_head;
 
 static int uproc_kputc(task_t *task, char ch) {
   putch(ch); // safe for qemu even if not lock-protected
@@ -16,12 +17,40 @@ static int uproc_getpid(task_t *task){
 static int uproc_sleep(task_t *task, int seconds){
     //printf("%d\n",seconds);
     uint64_t wakeup = io_read(AM_TIMER_UPTIME).us + 1000000L*seconds;
-    while(io_read(AM_TIMER_UPTIME).us < wakeup){
+    /*while(io_read(AM_TIMER_UPTIME).us < wakeup){
         printf("%d   %d\n",io_read(AM_TIMER_UPTIME).us,wakeup);
         yield();
+    }*/
+    sleep_t *new=kalloc_safe(sizeof(sleep_t));
+    new->s=task;
+    new->wakeup=wakeup;
+    new->next=NULL;
+    task->status=BLOCKED;
+    if(sleep_head.next==NULL){
+        sleep_head.next=new;
+    }else{
+        new->next=sleep_head.next;
+        sleep_head.next=new;
     }
-    task->status=RUNABLE;
+    //task->status=RUNABLE;
     return 0;
+}
+static Context *uproc_wake(Event ev,Context *c){
+     if(sleep_head.next!=NULL){
+        sleep_t *cur=&sleep_head;
+        uint64_t timer=io_read(AM_TIMER_UPTIME).us;
+        
+        while(cur->next!=NULL){
+            if(timer > cur->next->wakeup){
+                cur->next->s->status=RUNABLE;
+                cur->next=cur->next->next;
+            }
+            else{
+                cur=cur->next;
+            }
+        }
+     }
+     return NULL; 
 }
 static int64_t uproc_uptime(task_t *task){
     return 0;
@@ -65,7 +94,7 @@ static Context *pagefault(Event ev,Context *ctx){
 static Context *syscall(Event ev,Context *ctx){
     void *ret=NULL;
     //kmt->spin_unlock(&traplock);
-    iset(true);
+    //iset(true);
     assert(ev.event==EVENT_SYSCALL);
     switch (ctx->GPRx){
         case SYS_exit:{
@@ -89,13 +118,7 @@ static Context *syscall(Event ev,Context *ctx){
             break;
         }
         case SYS_sleep:{
-            //uproc_sleep(task_cpu[cpu_current()],ctx->GPR1);
-            uint64_t wakeup = io_read(AM_TIMER_UPTIME).us + 1000000L*ctx->GPR1;//seconds;
-            while(io_read(AM_TIMER_UPTIME).us < wakeup){
-                printf("%d   %d\n",io_read(AM_TIMER_UPTIME).us,wakeup);
-                yield();
-            }
-            task_cpu[cpu_current()]->status=RUNABLE;
+            uproc_sleep(task_cpu[cpu_current()],ctx->GPR1);
             break;
         }
         case SYS_uptime:{
@@ -114,14 +137,16 @@ static Context *syscall(Event ev,Context *ctx){
         }
 
     }
-    iset(false);
+    //iset(false);
 
     return ret;
 }
 static void uproc_init(){
     vme_init(uproc_alloc, pmm->free);
+    sleep_head.next=NULL;
     os->on_irq(0,EVENT_PAGEFAULT, pagefault);
     os->on_irq(0,EVENT_SYSCALL,   syscall);
+    os->on_irq(0,EVENT_NULL,      uproc_wake);
 
 }
 int uproc_create(task_t *task, const char *name){

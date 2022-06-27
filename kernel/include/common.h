@@ -39,3 +39,10 @@ struct semaphore {
   struct taskqueue *trail;
   // TODO
 };
+
+struct sleep {
+  uint64_t wakeup;
+  struct task *s;
+  struct sleep *next;
+};
+typedef struct sleep sleep_t;

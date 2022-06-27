@@ -91,6 +91,7 @@ extern task_t *task_head;
 task_t task_boot[8];
 int handler_sum=0;
 task_t *round;
+sleep_t sleep_head;
 
 
 static Context *os_trap(Event ev, Context *ctx){
