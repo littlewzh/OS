@@ -51,7 +51,7 @@ static void os_init() {
   uproc->init();
   #ifdef TEST3
   uproc_create(task_alloc(),"init1");
-  uproc_create(task_alloc(),"init2");
+  //uproc_create(task_alloc(),"init2");
   #endif
   #ifdef TEST2
   dev->init();
@@ -113,9 +113,9 @@ static Context *os_trap(Event ev, Context *ctx){
     if(round==NULL ){
       round=task_head;
     }
-    /*else if(round==task_head){
-      round=NULL;
-    }*/
+    //else if(round==task_head){
+    //  round=NULL;
+    //}
     else{
       //if(round->next == NULL) {round=task_head;}
       //else{round=round->next;}
