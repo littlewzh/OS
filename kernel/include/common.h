@@ -13,6 +13,7 @@ struct task {
   Context *ctx;
   uint32_t status;                   //the running status of the task
   char *name;
+  uint32_t pid;
   //uint8_t flag[8];
   struct task *next;
   AddrSpace as;

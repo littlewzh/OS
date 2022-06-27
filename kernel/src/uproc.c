@@ -6,13 +6,15 @@ extern spinlock_t traplock;
 extern task_t *task_head;
 extern task_t *task_cpu[8]; 
 extern sleep_t sleep_head;
+static uint32_t process_pid;
 
 static int uproc_kputc(task_t *task, char ch) {
   putch(ch); // safe for qemu even if not lock-protected
   return 0;
 }
 static int uproc_getpid(task_t *task){
-    return 0;
+    //task->pid;
+    return task->pid;
 }
 static int uproc_sleep(task_t *task, int seconds){
     //printf("%d\n",seconds);
@@ -53,9 +55,11 @@ static Context *uproc_wake(Event ev,Context *c){
      return NULL; 
 }
 static int64_t uproc_uptime(task_t *task){
-    return 0;
+    uint64_t now=io_read(AM_TIMER_UPTIME).us/1000;
+    return now;
 }
 static int uproc_fork(task_t *task){
+
     return 0;
 }
 static int uproc_wait(task_t *task, int *status){
@@ -110,7 +114,7 @@ static Context *syscall(Event ev,Context *ctx){
             break;
         }
         case SYS_getpid:{
-            uproc_getpid(task_cpu[cpu_current()]);
+            ctx->GPRx=uproc_getpid(task_cpu[cpu_current()]);
             break;
         }
         case SYS_kill:{
@@ -122,7 +126,7 @@ static Context *syscall(Event ev,Context *ctx){
             break;
         }
         case SYS_uptime:{
-            uproc_uptime(task_cpu[cpu_current()]);
+            ctx->GPRx=uproc_uptime(task_cpu[cpu_current()]);
             break;
         }
         case SYS_wait:{
@@ -153,6 +157,8 @@ int uproc_create(task_t *task, const char *name){
     kmt->spin_lock(&traplock);
     task->name=(char *)name;
     task->stack=kalloc_safe(STACK_SIZE);
+    task->pid=(++process_pid);
+    panic_on(process_pid>32760,"the pid number is too large");
     Area ustack={.start=task->stack,.end=(void *)((uintptr_t)(task->stack)+STACK_SIZE)};
     protect(&task->as);
     task->ctx=ucontext(&task->as,ustack,(void *)task->as.area.start);
