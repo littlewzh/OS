@@ -20,6 +20,7 @@ static int uproc_sleep(task_t *task, int seconds){
         printf("%d   %d\n",io_read(AM_TIMER_UPTIME).us,wakeup);
         yield();
     }
+    task->status=RUNABLE;
     return 0;
 }
 static int64_t uproc_uptime(task_t *task){
