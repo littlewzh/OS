@@ -128,7 +128,7 @@ static Context *os_trap(Event ev, Context *ctx){
       if(round==NULL) break;
       }
     }
-    if(round!=NULL) printf("the thread %s status is %d\n",round->name,round->status);
+    //if(round!=NULL) printf("the thread %s status is %d\n",round->name,round->status);
     if(round==NULL){task_cpu[id]=&task_boot[id];task_cpu[id]->status=RUNNING;next=task_boot[id].ctx;}
     else{
       assert(round->status == RUNABLE);
