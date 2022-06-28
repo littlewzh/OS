@@ -49,6 +49,7 @@ static void os_init() {
   pmm->init();
   kmt->init();
   uproc->init();
+  dev->init();
   #ifdef TEST3
   uproc_create(task_alloc(),"init1");
   //uproc_create(task_alloc(),"init2");
