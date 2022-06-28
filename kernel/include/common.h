@@ -5,7 +5,12 @@
 #define RUNNING 1
 #define BLOCKED 2
 #define STACK_SIZE 8192
-
+#define LOCAL_MACHINE
+#ifdef LOCAL_MACHINE
+  #define debug(...) printf(__VA_ARGS__)
+#else
+  #define debug(...) 
+#endif
 void *kalloc_safe(size_t size);
 void kfree_safe(void *ptr);
 

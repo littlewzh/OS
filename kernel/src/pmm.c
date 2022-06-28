@@ -1,11 +1,6 @@
 #include <common.h>
 #define PAGESIZE 16384//65536//32768
-//#define LOCAL_MACHINE
-#ifdef LOCAL_MACHINE
-  #define debug(...) printf(__VA_ARGS__)
-#else
-  #define debug(...) 
-#endif
+
 
 //lock
 static inline int xchg(int *addr, int newval) {

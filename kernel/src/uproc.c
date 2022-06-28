@@ -116,7 +116,7 @@ static Context *pagefault(Event ev,Context *ctx){
         memcpy(pa,_init,_init_len);
     }
 
-    printf("addr: %p map: %p -> %p\n",ev.ref,pa,va);
+    debug("addr: %p map: %p -> %p\n",ev.ref,pa,va);
     map(as,va,pa,MMAP_READ | MMAP_WRITE);
     return NULL;
 }
