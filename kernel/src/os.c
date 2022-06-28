@@ -113,9 +113,9 @@ static Context *os_trap(Event ev, Context *ctx){
     if(round==NULL ){
       round=task_head;
     }
-    else if(round==task_head){
-      round=NULL;
-    }
+    //else if(round==task_head){
+    //  round=NULL;
+    //}
     else{
       if(round->next == NULL) {round=task_head;}
       else{round=round->next;}
