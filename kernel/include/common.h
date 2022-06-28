@@ -5,7 +5,7 @@
 #define RUNNING 1
 #define BLOCKED 2
 #define STACK_SIZE 8192
-#define LOCAL_MACHINE
+//#define LOCAL_MACHINE
 #ifdef LOCAL_MACHINE
   #define debug(...) printf(__VA_ARGS__)
 #else
