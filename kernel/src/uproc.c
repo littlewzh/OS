@@ -61,7 +61,7 @@ static int64_t uproc_uptime(task_t *task){
 static int uproc_fork(task_t *task){
 
     task_t *child=kalloc_safe(sizeof(task_t));
-    uproc_create(child,"child");
+    uproc_create(child,"ch");
     void *cr3=child->ctx->cr3;
     uintptr_t rsp0=child->ctx->rsp0;
     memcpy(child->ctx,task->ctx,sizeof(Context));
@@ -79,7 +79,7 @@ static int uproc_fork(task_t *task){
         memcpy(new_pa,pa,(size_t)sz);
         child->va[i]=va;
         child->pa[i]=new_pa;
-        printf("new map: %p -> %p\n",new_pa,va);
+        printf("new map %d: %p -> %p\n",child->pid,new_pa,va);
         map(&child->as,va,new_pa,MMAP_READ | MMAP_WRITE);
     }
     //printf("\n%d\n",child->pid);
