@@ -4,6 +4,7 @@
 #define RUNABLE 0
 #define RUNNING 1
 #define BLOCKED 2
+#define EXIT    3 
 #define STACK_SIZE 4096
 //#define LOCAL_MACHINE
 #ifdef LOCAL_MACHINE
@@ -19,6 +20,8 @@ struct task {
   uint32_t status;                   //the running status of the task
   char *name;
   uint32_t pid;
+  uint32_t ppid;
+  uint32_t e_staus;
   //uint8_t flag[8];
   void* va[64];
   void* pa[64];

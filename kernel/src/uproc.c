@@ -71,6 +71,7 @@ static int uproc_fork(task_t *task){
     
     child->ctx->GPRx=0;
     child->np=task->np;
+    child->ppid=task->pid;
     for(int i=0;i< task->np;i++){
         int sz=task->as.pgsize;
         void *va=task->va[i];
@@ -183,6 +184,7 @@ int uproc_create(task_t *task, const char *name){
     task->name=(char *)name;
     task->stack=kalloc_safe(STACK_SIZE);
     task->pid=(++process_pid);
+    task->ppid=0;
     task->np=0;
     panic_on(process_pid>32760,"the pid number is too large");
     Area ustack={.start=task->stack,.end=(void *)((uintptr_t)(task->stack)+STACK_SIZE)};
