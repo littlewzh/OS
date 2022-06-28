@@ -94,7 +94,7 @@ static int uproc_wait(task_t *task, int *status){
             while(now->status!=EXIT){
                 yield();
             }
-            *status=now->e_staus;
+            if(status != NULL) *status=now->e_staus;
             break;
         }
     }
