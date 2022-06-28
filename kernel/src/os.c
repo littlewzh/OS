@@ -48,7 +48,7 @@ extern int uproc_create(task_t *task, const char *name);
 static void os_init() {
   pmm->init();
   kmt->init();
-  dev->init();
+  //dev->init();
   uproc->init();
   
   #ifdef TEST3
