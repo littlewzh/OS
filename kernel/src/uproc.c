@@ -90,7 +90,9 @@ static int uproc_wait(task_t *task, int *status){
     return 0;
 }
 static int uproc_exit(task_t *task, int status){
-    panic("this is the init process which should not exit\n");
+    task->e_staus=status;
+    task->status=EXIT;
+    //panic("this is the init process which should not exit\n");
     return 0;
 }
 static int uproc_kill(task_t *task, int pid){
