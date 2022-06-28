@@ -79,7 +79,7 @@ static int uproc_fork(task_t *task){
         memcpy(new_pa,pa,(size_t)sz);
         child->va[i]=va;
         child->pa[i]=new_pa;
-        printf("new map: %p -> %p\n",new_pa,va);
+        //printf("new map: %p -> %p\n",new_pa,va);
         map(&child->as,va,new_pa,MMAP_READ | MMAP_WRITE);
     }
     //printf("\n%d\n",child->pid);
@@ -116,7 +116,7 @@ static Context *pagefault(Event ev,Context *ctx){
         memcpy(pa,_init,_init_len);
     }
 
-    printf("map: %p -> %p\n",pa,va);
+    //printf("map: %p -> %p\n",pa,va);
     map(as,va,pa,MMAP_READ | MMAP_WRITE);
     return NULL;
 }
