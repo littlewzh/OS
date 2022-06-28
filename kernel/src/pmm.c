@@ -88,7 +88,7 @@ void *page_alloc(int num){
     while(cur->fnext != NULL){
       if(cur->fnext->start >= (((PAGESIZE)+cur->end+pagesize)&(~(pagesize-1)))+pagesize){
         page_t *new=(page_t *)((((PAGESIZE)+cur->end+pagesize)&(~(pagesize-1)))-PAGESIZE);
-        debug("%x %x %x ",cur->fnext->start,pagesize,new);
+        //debug("%x %x %x ",cur->fnext->start,pagesize,new);
         new->start=(uintptr_t)new;
         new->end=new->start+PAGESIZE+pagesize;
         new->fnext=cur->fnext;
@@ -117,7 +117,7 @@ void list_init(){
   freetrail->start=(uintptr_t)freetrail;
   freetrail->end=(uintptr_t)freetrail->start+PAGESIZE;
   freecurrent=freehead;
-  debug("%x %x %x\n",freehead,freecurrent,freetrail);
+  //debug("%x %x %x\n",freehead,freecurrent,freetrail);
 }
 // 框架代码中的 pmm_init (在 AbstractMachine 中运行)
 
@@ -130,7 +130,7 @@ static void pmm_init() {
     int size=16;
     for(int j=0;j<9;j++){
       slab[i][j]=(page_t *)page_alloc(1);
-      debug("%d %x\n",size,slab[i][j]);
+      //debug("%d %x\n",size,slab[i][j]);
       page_init(slab[i][j],size,i);
       size*=2;
     }
@@ -142,7 +142,7 @@ static void *fast_alloc(int k,int ncpu,size_t size){
   lock(&cur->spinlock);
   while(cur!=NULL){
     if(cur->sp==0){unlock(&cur->spinlock);cur=cur->next;if(cur!=NULL){lock(&cur->spinlock);}continue;}
-    debug(" start=%x sp=%d %d ",cur->start,cur->sp,cur->stack[cur->sp]);
+    //debug(" start=%x sp=%d %d ",cur->start,cur->sp,cur->stack[cur->sp]);
     void *ret=(void *)(cur->start+4096+(cur->stack[cur->sp])*size);
     cur->sp--;
     unlock(&cur->spinlock);
@@ -162,7 +162,7 @@ static void *kalloc(size_t size) {
   int ncpu=cpu_current();
   size_t real_size=trans(size);
   int k=lg(real_size);
-  debug("cpu=%d size=%d realsize=%d k=%d ",ncpu,size,real_size,k);
+  //debug("cpu=%d size=%d realsize=%d k=%d ",ncpu,size,real_size,k);
   void *ret=NULL;
   if(real_size > 16*1024*1024){return NULL;}
   if(real_size <= 4096){
@@ -178,14 +178,14 @@ static void *kalloc(size_t size) {
       new->sp--;
       unlock(&new->spinlock);
     }
-    debug("addr=%x\n",ret);
+    //debug("addr=%x\n",ret);
     if((uintptr_t)ret%real_size!=0){return NULL;}//still have some strange incorrent alignment problem
     assert((uintptr_t)ret%real_size==0);
     return ret;
   }
   else{
     ret=slow_alloc(real_size);
-    debug("addr=%x\n",ret);
+    //debug("addr=%x\n",ret);
     //if((uintptr_t)ret%real_size!=0){return NULL;}
     return ret;
   }
