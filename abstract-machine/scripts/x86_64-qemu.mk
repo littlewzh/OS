@@ -11,3 +11,8 @@ AM_SRCS := x86/qemu/start64.S \
 
 run: build-arg
 	@qemu-system-x86_64 $(QEMU_FLAGS)
+debug: build-arg
+	@qemu-system-x86_64 -S -s -serial mon:stdio \
+              -machine accel=tcg \
+              -smp "$(smp)" \
+              -drive format=raw,file=$(IMAGE)

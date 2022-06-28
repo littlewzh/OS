@@ -1,3 +1,5 @@
+export TOKEN   := tUbpOMrq
+export MODULE  := L3
 NAME           := kernel
 SRCS           := framework/main.c $(shell find -L ./src/ -name "*.c")
 INC_PATH       := include/ framework/
@@ -10,3 +12,4 @@ endif
 include $(AM_HOME)/Makefile
 include ../Makefile.lab
 image: git
+

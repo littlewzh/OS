@@ -50,3 +50,55 @@ static inline int sleep(int seconds) {
 static inline int64_t uptime() {
   return syscall(SYS_uptime, 0, 0, 0, 0);
 }
+void printstr(char *s){
+  //for(int i=0;i<num;i++){
+    char *a=s;
+   while(*a != '\0') kputc(*a++);
+  //}
+}
+void printnum(uint32_t num, int base) {
+  const int buf_sz = 51;
+  char buf[buf_sz];
+  buf[buf_sz - 1] = '\0';
+  if (num == 0) {
+    kputc('0');
+  }
+
+  char *p = &buf[buf_sz - 1];
+  uint32_t n = *(uint32_t *)&num;
+  while (n != 0) {
+    p--;
+    *p = n % base+'0';
+    n /= base;
+  }
+  printstr(p);
+  //return _prints(out, p);
+}
+void printll(uint64_t num, int base) {
+  const int buf_sz = 51;
+  char buf[buf_sz];
+  buf[buf_sz - 1] = '\0';
+  if (num == 0) {
+    kputc('0');
+  }
+
+  char *p = &buf[buf_sz - 1];
+  uint64_t n = *(uint64_t *)&num;
+  while (n != 0) {
+    p--;
+    *p = n % base+'0';
+    n /= base;
+  }
+  printstr(p);
+  //return _prints(out, p);
+}
+size_t strlen(const char *s) {           //不包括‘\0’
+  //assert(s!=NULL);
+  char *ps=(char *)s;
+  int ret=0;
+  while(*ps++){
+    ret++;
+  }
+  return ret;
+  //panic("Not implemented");
+}

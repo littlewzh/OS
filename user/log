@@ -1,0 +1,526 @@
+00000000  E8D0030000        call 0x3d5
+00000005  4889C7            mov rdi,rax
+00000008  48C7C003000000    mov rax,0x3
+0000000F  CD80              int 0x80
+00000011  F30F1EFA          endbr64
+00000015  4989F8            mov r8,rdi
+00000018  0FB63F            movzx edi,byte [rdi]
+0000001B  4084FF            test dil,dil
+0000001E  7427              jz 0x47
+00000020  4983C001          add r8,byte +0x1
+00000024  480FBEFF          movsx rdi,dil
+00000028  B801000000        mov eax,0x1
+0000002D  BE00000000        mov esi,0x0
+00000032  BA00000000        mov edx,0x0
+00000037  B900000000        mov ecx,0x0
+0000003C  CD80              int 0x80
+0000003E  410FB638          movzx edi,byte [r8]
+00000042  4084FF            test dil,dil
+00000045  75D9              jnz 0x20
+00000047  C3                ret
+00000048  F30F1EFA          endbr64
+0000004C  4883EC48          sub rsp,byte +0x48
+00000050  C644243F00        mov byte [rsp+0x3f],0x0
+00000055  85FF              test edi,edi
+00000057  7522              jnz 0x7b
+00000059  B801000000        mov eax,0x1
+0000005E  BF30000000        mov edi,0x30
+00000063  BE00000000        mov esi,0x0
+00000068  BA00000000        mov edx,0x0
+0000006D  B900000000        mov ecx,0x0
+00000072  CD80              int 0x80
+00000074  488D4C243F        lea rcx,[rsp+0x3f]
+00000079  EB1F              jmp short 0x9a
+0000007B  488D4C243F        lea rcx,[rsp+0x3f]
+00000080  4883E901          sub rcx,byte +0x1
+00000084  89F8              mov eax,edi
+00000086  BA00000000        mov edx,0x0
+0000008B  F7F6              div esi
+0000008D  83C230            add edx,byte +0x30
+00000090  8811              mov [rcx],dl
+00000092  89FA              mov edx,edi
+00000094  89C7              mov edi,eax
+00000096  39D6              cmp esi,edx
+00000098  76E6              jna 0x80
+0000009A  4889CF            mov rdi,rcx
+0000009D  E86FFFFFFF        call 0x11
+000000A2  4883C448          add rsp,byte +0x48
+000000A6  C3                ret
+000000A7  F30F1EFA          endbr64
+000000AB  4883EC48          sub rsp,byte +0x48
+000000AF  C644243F00        mov byte [rsp+0x3f],0x0
+000000B4  4885FF            test rdi,rdi
+000000B7  7522              jnz 0xdb
+000000B9  B801000000        mov eax,0x1
+000000BE  BF30000000        mov edi,0x30
+000000C3  BE00000000        mov esi,0x0
+000000C8  BA00000000        mov edx,0x0
+000000CD  B900000000        mov ecx,0x0
+000000D2  CD80              int 0x80
+000000D4  4C8D44243F        lea r8,[rsp+0x3f]
+000000D9  EB28              jmp short 0x103
+000000DB  4C8D44243F        lea r8,[rsp+0x3f]
+000000E0  4863CE            movsxd rcx,esi
+000000E3  4983E801          sub r8,byte +0x1
+000000E7  4889F8            mov rax,rdi
+000000EA  BA00000000        mov edx,0x0
+000000EF  48F7F1            div rcx
+000000F2  83C230            add edx,byte +0x30
+000000F5  418810            mov [r8],dl
+000000F8  4889FA            mov rdx,rdi
+000000FB  4889C7            mov rdi,rax
+000000FE  4839D1            cmp rcx,rdx
+00000101  76E0              jna 0xe3
+00000103  4C89C7            mov rdi,r8
+00000106  E806FFFFFF        call 0x11
+0000010B  4883C448          add rsp,byte +0x48
+0000010F  C3                ret
+00000110  F30F1EFA          endbr64
+00000114  488D5701          lea rdx,[rdi+0x1]
+00000118  803F00            cmp byte [rdi],0x0
+0000011B  741B              jz 0x138
+0000011D  4889D0            mov rax,rdx
+00000120  B901000000        mov ecx,0x1
+00000125  29D1              sub ecx,edx
+00000127  8D1401            lea edx,[rcx+rax]
+0000012A  4883C001          add rax,byte +0x1
+0000012E  8078FF00          cmp byte [rax-0x1],0x0
+00000132  75F3              jnz 0x127
+00000134  4863C2            movsxd rax,edx
+00000137  C3                ret
+00000138  BA00000000        mov edx,0x0
+0000013D  EBF5              jmp short 0x134
+0000013F  F30F1EFA          endbr64
+00000143  55                push rbp
+00000144  53                push rbx
+00000145  4883EC08          sub rsp,byte +0x8
+00000149  B802000000        mov eax,0x2
+0000014E  BF00000000        mov edi,0x0
+00000153  BE00000000        mov esi,0x0
+00000158  BA00000000        mov edx,0x0
+0000015D  B900000000        mov ecx,0x0
+00000162  CD80              int 0x80
+00000164  B802000000        mov eax,0x2
+00000169  CD80              int 0x80
+0000016B  85C0              test eax,eax
+0000016D  488D2D7D020000    lea rbp,[rel 0x3f1]
+00000174  488D0580020000    lea rax,[rel 0x3fb]
+0000017B  480F45E8          cmovnz rbp,rax
+0000017F  BB00000000        mov ebx,0x0
+00000184  4889EF            mov rdi,rbp
+00000187  E885FEFFFF        call 0x11
+0000018C  BE0A000000        mov esi,0xa
+00000191  89DF              mov edi,ebx
+00000193  E8B0FEFFFF        call 0x48
+00000198  B801000000        mov eax,0x1
+0000019D  BF0A000000        mov edi,0xa
+000001A2  BE00000000        mov esi,0x0
+000001A7  BA00000000        mov edx,0x0
+000001AC  B900000000        mov ecx,0x0
+000001B1  CD80              int 0x80
+000001B3  B80E000000        mov eax,0xe
+000001B8  BF02000000        mov edi,0x2
+000001BD  CD80              int 0x80
+000001BF  83C301            add ebx,byte +0x1
+000001C2  EBC0              jmp short 0x184
+000001C4  F30F1EFA          endbr64
+000001C8  4155              push r13
+000001CA  4154              push r12
+000001CC  55                push rbp
+000001CD  53                push rbx
+000001CE  4883EC08          sub rsp,byte +0x8
+000001D2  488D2D97030000    lea rbp,[rel 0x570]
+000001D9  4C8D2D2F020000    lea r13,[rel 0x40f]
+000001E0  E99E000000        jmp 0x283
+000001E5  3C2B              cmp al,0x2b
+000001E7  756F              jnz 0x258
+000001E9  488D3D19020000    lea rdi,[rel 0x409]
+000001F0  E81CFEFFFF        call 0x11
+000001F5  EB22              jmp short 0x219
+000001F7  3C5E              cmp al,0x5e
+000001F9  744F              jz 0x24a
+000001FB  3C76              cmp al,0x76
+000001FD  7559              jnz 0x258
+000001FF  488D3D1B020000    lea rdi,[rel 0x421]
+00000206  E806FEFFFF        call 0x11
+0000020B  EB0C              jmp short 0x219
+0000020D  488D3DF1010000    lea rdi,[rel 0x405]
+00000214  E8F8FDFFFF        call 0x11
+00000219  4883C301          add rbx,byte +0x1
+0000021D  0FB603            movzx eax,byte [rbx]
+00000220  84C0              test al,al
+00000222  7442              jz 0x266
+00000224  3C3E              cmp al,0x3e
+00000226  7418              jz 0x240
+00000228  7FCD              jg 0x1f7
+0000022A  3C2E              cmp al,0x2e
+0000022C  74DF              jz 0x20d
+0000022E  3C3C              cmp al,0x3c
+00000230  75B3              jnz 0x1e5
+00000232  488D3DDC010000    lea rdi,[rel 0x415]
+00000239  E8D3FDFFFF        call 0x11
+0000023E  EBD9              jmp short 0x219
+00000240  4C89EF            mov rdi,r13
+00000243  E8C9FDFFFF        call 0x11
+00000248  EBCF              jmp short 0x219
+0000024A  488D3DCA010000    lea rdi,[rel 0x41b]
+00000251  E8BBFDFFFF        call 0x11
+00000256  EBC1              jmp short 0x219
+00000258  488D3DC8010000    lea rdi,[rel 0x427]
+0000025F  E8ADFDFFFF        call 0x11
+00000264  EBB3              jmp short 0x219
+00000266  488D3DC4010000    lea rdi,[rel 0x431]
+0000026D  E89FFDFFFF        call 0x11
+00000272  4C89E7            mov rdi,r12
+00000275  E896FEFFFF        call 0x110
+0000027A  4883C510          add rbp,byte +0x10
+0000027E  4885C0            test rax,rax
+00000281  7410              jz 0x293
+00000283  4989EC            mov r12,rbp
+00000286  0FB64500          movzx eax,byte [rbp+0x0]
+0000028A  84C0              test al,al
+0000028C  74D8              jz 0x266
+0000028E  4889EB            mov rbx,rbp
+00000291  EB91              jmp short 0x224
+00000293  B80E000000        mov eax,0xe
+00000298  BF01000000        mov edi,0x1
+0000029D  BE00000000        mov esi,0x0
+000002A2  BA00000000        mov edx,0x0
+000002A7  B900000000        mov ecx,0x0
+000002AC  CD80              int 0x80
+000002AE  4883C408          add rsp,byte +0x8
+000002B2  5B                pop rbx
+000002B3  5D                pop rbp
+000002B4  415C              pop r12
+000002B6  415D              pop r13
+000002B8  C3                ret
+000002B9  F30F1EFA          endbr64
+000002BD  4156              push r14
+000002BF  4155              push r13
+000002C1  4154              push r12
+000002C3  55                push rbp
+000002C4  53                push rbx
+000002C5  4863D6            movsxd rdx,esi
+000002C8  4863C7            movsxd rax,edi
+000002CB  48C1E004          shl rax,byte 0x4
+000002CF  48030572020000    add rax,[rel 0x548]
+000002D6  803C102B          cmp byte [rax+rdx],0x2b
+000002DA  7418              jz 0x2f4
+000002DC  89FD              mov ebp,edi
+000002DE  4189F4            mov r12d,esi
+000002E1  488D1DC8020000    lea rbx,[rel 0x5b0]
+000002E8  4C63F6            movsxd r14,esi
+000002EB  4C63EF            movsxd r13,edi
+000002EE  49C1E504          shl r13,byte 0x4
+000002F2  EB46              jmp short 0x33a
+000002F4  B800000000        mov eax,0x0
+000002F9  E8C6FEFFFF        call 0x1c4
+000002FE  5B                pop rbx
+000002FF  5D                pop rbp
+00000300  415C              pop r12
+00000302  415D              pop r13
+00000304  415E              pop r14
+00000306  C3                ret
+00000307  B802000000        mov eax,0x2
+0000030C  BF00000000        mov edi,0x0
+00000311  BE00000000        mov esi,0x0
+00000316  BA00000000        mov edx,0x0
+0000031B  B900000000        mov ecx,0x0
+00000320  CD80              int 0x80
+00000322  85C0              test eax,eax
+00000324  7440              jz 0x366
+00000326  4883C30C          add rbx,byte +0xc
+0000032A  488D057F020000    lea rax,[rel 0x5b0]
+00000331  488D4030          lea rax,[rax+0x30]
+00000335  4839C3            cmp rbx,rax
+00000338  744A              jz 0x384
+0000033A  4189E8            mov r8d,ebp
+0000033D  440303            add r8d,[rbx]
+00000340  4589E1            mov r9d,r12d
+00000343  44034B04          add r9d,[rbx+0x4]
+00000347  4963D1            movsxd rdx,r9d
+0000034A  4963C0            movsxd rax,r8d
+0000034D  48C1E004          shl rax,byte 0x4
+00000351  480305F0010000    add rax,[rel 0x548]
+00000358  0FB60410          movzx eax,byte [rax+rdx]
+0000035C  3C2B              cmp al,0x2b
+0000035E  74A7              jz 0x307
+00000360  3C2E              cmp al,0x2e
+00000362  75C2              jnz 0x326
+00000364  EBA1              jmp short 0x307
+00000366  4C89E8            mov rax,r13
+00000369  480305D8010000    add rax,[rel 0x548]
+00000370  8B5308            mov edx,[rbx+0x8]
+00000373  42881430          mov [rax+r14],dl
+00000377  4489CE            mov esi,r9d
+0000037A  4489C7            mov edi,r8d
+0000037D  E837FFFFFF        call 0x2b9
+00000382  EBA2              jmp short 0x326
+00000384  B80E000000        mov eax,0xe
+00000389  BF01000000        mov edi,0x1
+0000038E  BE00000000        mov esi,0x0
+00000393  BA00000000        mov edx,0x0
+00000398  B900000000        mov ecx,0x0
+0000039D  CD80              int 0x80
+0000039F  EBE3              jmp short 0x384
+000003A1  F30F1EFA          endbr64
+000003A5  4883EC08          sub rsp,byte +0x8
+000003A9  BE01000000        mov esi,0x1
+000003AE  BF01000000        mov edi,0x1
+000003B3  E801FFFFFF        call 0x2b9
+000003B8  B80E000000        mov eax,0xe
+000003BD  BF01000000        mov edi,0x1
+000003C2  BE00000000        mov esi,0x0
+000003C7  BA00000000        mov edx,0x0
+000003CC  B900000000        mov ecx,0x0
+000003D1  CD80              int 0x80
+000003D3  EBE3              jmp short 0x3b8
+000003D5  F30F1EFA          endbr64
+000003D9  4883EC08          sub rsp,byte +0x8
+000003DD  B800000000        mov eax,0x0
+000003E2  E8BAFFFFFF        call 0x3a1
+000003E7  B800000000        mov eax,0x0
+000003EC  4883C408          add rsp,byte +0x8
+000003F0  C3                ret
+000003F1  50                push rax
+000003F2  61                db 0x61
+000003F3  7265              jc 0x45a
+000003F5  6E                outsb
+000003F6  7431              jz 0x429
+000003F8  2023              and [rbx],ah
+000003FA  006368            add [rbx+0x68],ah
+000003FD  696C643120202300  imul ebp,[rsp+0x31],dword 0x232020
+00000405  2020              and [rax],ah
+00000407  2000              and [rax],al
+00000409  20E2              and dl,ah
+0000040B  97                xchg eax,edi
+0000040C  8B20              mov esp,[rax]
+0000040E  0020              add [rax],ah
+00000410  E286              loop 0x398
+00000412  92                xchg eax,edx
+00000413  2000              and [rax],al
+00000415  20E2              and dl,ah
+00000417  8690200020E2      xchg dl,[rax-0x1ddfffe0]
+0000041D  8691200020E2      xchg dl,[rcx-0x1ddfffe0]
+00000423  86932000E296      xchg dl,[rbx-0x691dffe0]
+00000429  87E2              xchg esp,edx
+0000042B  96                xchg eax,esi
+0000042C  87E2              xchg esp,edx
+0000042E  96                xchg eax,esi
+0000042F  8700              xchg eax,[rax]
+00000431  0A00              or al,[rax]
+00000433  0000              add [rax],al
+00000435  0000              add [rax],al
+00000437  0000              add [rax],al
+00000439  0000              add [rax],al
+0000043B  0000              add [rax],al
+0000043D  0000              add [rax],al
+0000043F  0000              add [rax],al
+00000441  0000              add [rax],al
+00000443  0000              add [rax],al
+00000445  0000              add [rax],al
+00000447  0000              add [rax],al
+00000449  0000              add [rax],al
+0000044B  0000              add [rax],al
+0000044D  0000              add [rax],al
+0000044F  0000              add [rax],al
+00000451  0000              add [rax],al
+00000453  0000              add [rax],al
+00000455  0000              add [rax],al
+00000457  0000              add [rax],al
+00000459  0000              add [rax],al
+0000045B  0000              add [rax],al
+0000045D  0000              add [rax],al
+0000045F  0000              add [rax],al
+00000461  0000              add [rax],al
+00000463  0000              add [rax],al
+00000465  0000              add [rax],al
+00000467  0000              add [rax],al
+00000469  0000              add [rax],al
+0000046B  0000              add [rax],al
+0000046D  0000              add [rax],al
+0000046F  0000              add [rax],al
+00000471  0000              add [rax],al
+00000473  0000              add [rax],al
+00000475  0000              add [rax],al
+00000477  0000              add [rax],al
+00000479  0000              add [rax],al
+0000047B  0000              add [rax],al
+0000047D  0000              add [rax],al
+0000047F  0000              add [rax],al
+00000481  0000              add [rax],al
+00000483  0000              add [rax],al
+00000485  0000              add [rax],al
+00000487  0000              add [rax],al
+00000489  0000              add [rax],al
+0000048B  0000              add [rax],al
+0000048D  0000              add [rax],al
+0000048F  0000              add [rax],al
+00000491  0000              add [rax],al
+00000493  0000              add [rax],al
+00000495  0000              add [rax],al
+00000497  0000              add [rax],al
+00000499  0000              add [rax],al
+0000049B  0000              add [rax],al
+0000049D  0000              add [rax],al
+0000049F  0000              add [rax],al
+000004A1  0000              add [rax],al
+000004A3  0000              add [rax],al
+000004A5  0000              add [rax],al
+000004A7  0000              add [rax],al
+000004A9  0000              add [rax],al
+000004AB  0000              add [rax],al
+000004AD  0000              add [rax],al
+000004AF  0000              add [rax],al
+000004B1  0000              add [rax],al
+000004B3  0000              add [rax],al
+000004B5  0000              add [rax],al
+000004B7  0000              add [rax],al
+000004B9  0000              add [rax],al
+000004BB  0000              add [rax],al
+000004BD  0000              add [rax],al
+000004BF  0000              add [rax],al
+000004C1  0000              add [rax],al
+000004C3  0000              add [rax],al
+000004C5  0000              add [rax],al
+000004C7  0000              add [rax],al
+000004C9  0000              add [rax],al
+000004CB  0000              add [rax],al
+000004CD  0000              add [rax],al
+000004CF  0000              add [rax],al
+000004D1  0000              add [rax],al
+000004D3  0000              add [rax],al
+000004D5  0000              add [rax],al
+000004D7  0000              add [rax],al
+000004D9  0000              add [rax],al
+000004DB  0000              add [rax],al
+000004DD  0000              add [rax],al
+000004DF  0000              add [rax],al
+000004E1  0000              add [rax],al
+000004E3  0000              add [rax],al
+000004E5  0000              add [rax],al
+000004E7  0000              add [rax],al
+000004E9  0000              add [rax],al
+000004EB  0000              add [rax],al
+000004ED  0000              add [rax],al
+000004EF  0000              add [rax],al
+000004F1  0000              add [rax],al
+000004F3  0000              add [rax],al
+000004F5  0000              add [rax],al
+000004F7  0000              add [rax],al
+000004F9  0000              add [rax],al
+000004FB  0000              add [rax],al
+000004FD  0000              add [rax],al
+000004FF  0000              add [rax],al
+00000501  0000              add [rax],al
+00000503  0000              add [rax],al
+00000505  0000              add [rax],al
+00000507  0000              add [rax],al
+00000509  0000              add [rax],al
+0000050B  0000              add [rax],al
+0000050D  0000              add [rax],al
+0000050F  0000              add [rax],al
+00000511  0000              add [rax],al
+00000513  0000              add [rax],al
+00000515  0000              add [rax],al
+00000517  0000              add [rax],al
+00000519  0000              add [rax],al
+0000051B  0000              add [rax],al
+0000051D  0000              add [rax],al
+0000051F  0000              add [rax],al
+00000521  0000              add [rax],al
+00000523  0000              add [rax],al
+00000525  0000              add [rax],al
+00000527  0000              add [rax],al
+00000529  0000              add [rax],al
+0000052B  0000              add [rax],al
+0000052D  0000              add [rax],al
+0000052F  0000              add [rax],al
+00000531  0000              add [rax],al
+00000533  0000              add [rax],al
+00000535  0000              add [rax],al
+00000537  0000              add [rax],al
+00000539  0000              add [rax],al
+0000053B  0000              add [rax],al
+0000053D  0000              add [rax],al
+0000053F  0000              add [rax],al
+00000541  0000              add [rax],al
+00000543  0000              add [rax],al
+00000545  0000              add [rax],al
+00000547  0000              add [rax],al
+00000549  0000              add [rax],al
+0000054B  0000              add [rax],al
+0000054D  0000              add [rax],al
+0000054F  0000              add [rax],al
+00000551  0000              add [rax],al
+00000553  0000              add [rax],al
+00000555  0000              add [rax],al
+00000557  0000              add [rax],al
+00000559  0000              add [rax],al
+0000055B  0000              add [rax],al
+0000055D  0000              add [rax],al
+0000055F  0000              add [rax],al
+00000561  0000              add [rax],al
+00000563  0000              add [rax],al
+00000565  0000              add [rax],al
+00000567  0000              add [rax],al
+00000569  0000              add [rax],al
+0000056B  0000              add [rax],al
+0000056D  0000              add [rax],al
+0000056F  0023              add [rbx],ah
+00000571  2323              and esp,[rbx]
+00000573  2323              and esp,[rbx]
+00000575  0000              add [rax],al
+00000577  0000              add [rax],al
+00000579  0000              add [rax],al
+0000057B  0000              add [rax],al
+0000057D  0000              add [rax],al
+0000057F  0023              add [rbx],ah
+00000581  2E2E2B23          sub esp,[cs:rbx]
+00000585  0000              add [rax],al
+00000587  0000              add [rax],al
+00000589  0000              add [rax],al
+0000058B  0000              add [rax],al
+0000058D  0000              add [rax],al
+0000058F  0023              add [rbx],ah
+00000591  232E              and ebp,[rsi]
+00000593  2E2300            and eax,[cs:rax]
+00000596  0000              add [rax],al
+00000598  0000              add [rax],al
+0000059A  0000              add [rax],al
+0000059C  0000              add [rax],al
+0000059E  0000              add [rax],al
+000005A0  2323              and esp,[rbx]
+000005A2  2323              and esp,[rbx]
+000005A4  2300              and eax,[rax]
+000005A6  0000              add [rax],al
+000005A8  0000              add [rax],al
+000005AA  0000              add [rax],al
+000005AC  0000              add [rax],al
+000005AE  0000              add [rax],al
+000005B0  0000              add [rax],al
+000005B2  0000              add [rax],al
+000005B4  0100              add [rax],eax
+000005B6  0000              add [rax],al
+000005B8  3E0000            add [ds:rax],al
+000005BB  0001              add [rcx],al
+000005BD  0000              add [rax],al
+000005BF  0000              add [rax],al
+000005C1  0000              add [rax],al
+000005C3  007600            add [rsi+0x0],dh
+000005C6  0000              add [rax],al
+000005C8  0000              add [rax],al
+000005CA  0000              add [rax],al
+000005CC  FF                db 0xff
+000005CD  FF                db 0xff
+000005CE  FF                db 0xff
+000005CF  FF                db 0xff
+000005D0  3C00              cmp al,0x0
+000005D2  0000              add [rax],al
+000005D4  FF                db 0xff
+000005D5  FF                db 0xff
+000005D6  FF                db 0xff
+000005D7  FF00              inc dword [rax]
+000005D9  0000              add [rax],al
+000005DB  005E00            add [rsi+0x0],bl
+000005DE  0000              add [rax],al
