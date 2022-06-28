@@ -83,7 +83,7 @@ static int uproc_fork(task_t *task){
         map(&child->as,va,new_pa,MMAP_READ | MMAP_WRITE);
     }
     //printf("\n%d\n",child->pid);
-    return 1;//child->pid;
+    return child->pid;
 }
 static int uproc_wait(task_t *task, int *status){
     return 0;
