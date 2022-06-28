@@ -87,6 +87,20 @@ static int uproc_fork(task_t *task){
     return child->pid;
 }
 static int uproc_wait(task_t *task, int *status){
+    int flag=0;
+    for(task_t *now=task_head;now!=NULL;now=now->next){
+        if(now->ppid==task->pid && now->status != EXIT){
+            flag=1;   //have found one
+            while(now->status!=EXIT){
+                yield();
+            }
+            *status=now->e_staus;
+            break;
+        }
+    }
+    if(flag==0){ //don't find
+        return -1;
+    }
     return 0;
 }
 static int uproc_exit(task_t *task, int status){
@@ -158,7 +172,7 @@ static Context *syscall(Event ev,Context *ctx){
             break;
         }
         case SYS_wait:{
-            uproc_wait(task_cpu[cpu_current()],(int *)ctx->GPR1);
+            ctx->GPRx=uproc_wait(task_cpu[cpu_current()],(int *)ctx->GPR1);
             break;
         }
         case SYS_mmap:{
