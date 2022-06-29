@@ -24,7 +24,7 @@ struct task {
   uint32_t ppid;
   uint32_t e_staus;
   uint32_t wait;
-  uintptr_t ret;
+  int *ret;
   //uint8_t flag[8];
   void* va[64];
   void* pa[64];
