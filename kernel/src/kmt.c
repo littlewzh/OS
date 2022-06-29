@@ -121,7 +121,9 @@ static void sem_wait(sem_t *sem){
         tmp->t=task_cpu[id];                  //how to record the all task
         //tmp->next=sem->head;
         //sem->head=tmp;
+        kmt->spin_lock(&traplock);
         task_cpu[id]->status=BLOCKED;//run blocked
+        kmt->spin_unlock(&traplock);
         tmp->next=NULL;
         if(sem->head==NULL){
             sem->head=tmp;
@@ -142,7 +144,9 @@ void sem_signal(sem_t *sem){
     sem->val++;
     if(sem->head!= NULL){
         struct taskqueue *tmp=sem->head->next;
+        kmt->spin_lock(&traplock);
         sem->head->t->status=RUNABLE;//run enable
+        kmt->spin_unlock(&traplock);
         kfree_safe((void *)sem->head);
         sem->head=tmp;
     }

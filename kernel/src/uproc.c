@@ -27,7 +27,9 @@ static int uproc_sleep(task_t *task, int seconds){
     new->s=task;
     new->wakeup=wakeup;
     new->next=NULL;
+    //kmt->spin_lock(&traplock);
     task->status=BLOCKED;
+    //kmt->spin_lock(&traplock);
     if(sleep_head.next==NULL){
         sleep_head.next=new;
     }else{
@@ -105,8 +107,10 @@ static int uproc_wait(task_t *task, int *status){
     return 0;
 }
 static int uproc_exit(task_t *task, int status){
+    kmt->spin_lock(&traplock);
     task->e_staus=status;
     task->status=EXIT;
+    kmt->spin_unlock(&traplock);
     //panic("this is the init process which should not exit\n");
     return 0;
 }
