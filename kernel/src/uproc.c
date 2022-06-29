@@ -94,9 +94,15 @@ static int uproc_wait(task_t *task, int *status){
         if(now->ppid==task->pid && now->status != EXIT){
             flag=1;   //have found one
             while(now->status!=EXIT){
+                kmt->spin_lock(&traplock);
+                task->status=RUNABLE;
+                kmt->spin_unlock(&traplock);
                // yield();
 
             }
+            kmt->spin_lock(&traplock);
+            task->status=RUNNING;//RUNABLE;
+            kmt->spin_unlock(&traplock);
             if(status != NULL) *status=now->e_staus;
             break;
         }
