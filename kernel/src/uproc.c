@@ -64,6 +64,7 @@ static int uproc_fork(task_t *task){
 
     task_t *child=kalloc_safe(sizeof(task_t));
     uproc_create(child,"ch");
+    child->parent=task;
     void *cr3=child->ctx->cr3;
     uintptr_t rsp0=child->ctx->rsp0;
     memcpy(child->ctx,task->ctx,sizeof(Context));
@@ -93,17 +94,18 @@ static int uproc_wait(task_t *task, int *status){
     for(task_t *now=task_head;now!=NULL;now=now->next){
         if(now->ppid==task->pid && now->status != EXIT){
             flag=1;   //have found one
-            while(now->status!=EXIT){
-                kmt->spin_lock(&traplock);
-                task->status=RUNABLE;
-                kmt->spin_unlock(&traplock);
+            //while(now->status!=EXIT){
+                //kmt->spin_lock(&traplock);
+              //  task->status=RUNABLE;
+               // kmt->spin_unlock(&traplock);
                // yield();
 
-            }
+//            }
             kmt->spin_lock(&traplock);
-            task->status=RUNNING;//RUNABLE;
+            task->status=WAIT;//BLOCKED;//RUNABLE;
+            now->wait=1;
             kmt->spin_unlock(&traplock);
-            if(status != NULL) *status=now->e_staus;
+            //if(status != NULL) *status=now->e_staus;
             break;
         }
     }
@@ -116,6 +118,9 @@ static int uproc_exit(task_t *task, int status){
     kmt->spin_lock(&traplock);
     task->e_staus=status;
     task->status=EXIT;
+    if(task->wait){
+        task->parent->status=RUNABLE;
+    }
     kmt->spin_unlock(&traplock);
     //panic("this is the init process which should not exit\n");
     return 0;
@@ -213,6 +218,8 @@ int uproc_create(task_t *task, const char *name){
     task->pid=(++process_pid);
     task->ppid=0;
     task->np=0;
+    task->wait=0;
+    task->parent=NULL;
     panic_on(process_pid>32760,"the pid number is too large");
     Area ustack={.start=task->stack,.end=(void *)((uintptr_t)(task->stack)+STACK_SIZE)};
     protect(&task->as);

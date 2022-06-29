@@ -5,6 +5,7 @@
 #define RUNNING 1
 #define BLOCKED 2
 #define EXIT    3 
+#define WAIT    4
 #define STACK_SIZE 4096
 //#define LOCAL_MACHINE
 #ifdef LOCAL_MACHINE
@@ -22,11 +23,14 @@ struct task {
   uint32_t pid;
   uint32_t ppid;
   uint32_t e_staus;
+  uint32_t wait;
+
   //uint8_t flag[8];
   void* va[64];
   void* pa[64];
   int np;
   struct task *next;
+  struct task *parent;
   AddrSpace as;
   void *stack;
   //uint8_t stack[STACK_SIZE];
