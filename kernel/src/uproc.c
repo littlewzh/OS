@@ -103,6 +103,7 @@ static int uproc_wait(task_t *task, int *status){
 //            }
             kmt->spin_lock(&traplock);
             task->status=WAIT;//BLOCKED;//RUNABLE;
+            task->ret=(uintptr_t)status;
             now->wait=1;
             kmt->spin_unlock(&traplock);
             //if(status != NULL) *status=now->e_staus;
@@ -120,6 +121,10 @@ static int uproc_exit(task_t *task, int status){
     task->status=EXIT;
     if(task->wait){
         task->parent->status=RUNABLE;
+        if(task->parent->ret != 0){
+            *(int *)task->parent->ret=status;
+        }
+        task->parent->ret = 0;
     }
     kmt->spin_unlock(&traplock);
     //panic("this is the init process which should not exit\n");
@@ -220,6 +225,7 @@ int uproc_create(task_t *task, const char *name){
     task->np=0;
     task->wait=0;
     task->parent=NULL;
+    task->ret=0;
     panic_on(process_pid>32760,"the pid number is too large");
     Area ustack={.start=task->stack,.end=(void *)((uintptr_t)(task->stack)+STACK_SIZE)};
     protect(&task->as);
