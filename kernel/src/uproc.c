@@ -93,6 +93,7 @@ static int uproc_wait(task_t *task, int *status){
             flag=1;   //have found one
             while(now->status!=EXIT){
                 yield();
+
             }
             if(status != NULL) *status=now->e_staus;
             break;
