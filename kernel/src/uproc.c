@@ -104,6 +104,7 @@ static int uproc_wait(task_t *task, int *status){
             kmt->spin_lock(&traplock);
             task->status=WAIT;//BLOCKED;//RUNABLE;
             task->ret=status;
+            printf("\n%p\n",status);
             now->wait=1;
             kmt->spin_unlock(&traplock);
             //if(status != NULL) *status=now->e_staus;
@@ -123,7 +124,7 @@ static int uproc_exit(task_t *task, int status){
         task->parent->status=RUNABLE;
         if(task->parent->ret != NULL){
             *(task->parent->ret)=status;
-            printf("%d",status);
+            printf("\n%p\n",task->parent->ret);
         }
         task->parent->ret = NULL;
     }
