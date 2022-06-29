@@ -123,6 +123,7 @@ static int uproc_exit(task_t *task, int status){
         task->parent->status=RUNABLE;
         if(task->parent->ret != NULL){
             *(task->parent->ret)=status;
+            printf("%d",status);
         }
         task->parent->ret = NULL;
     }
