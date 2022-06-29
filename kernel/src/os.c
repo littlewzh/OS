@@ -103,7 +103,7 @@ static Context *os_trap(Event ev, Context *ctx){
   else{
     task_cpu[id]->ctx=ctx;
   }
-  //printf("%s %p\n",task_cpu[id]->name,task_cpu[id]->stack);
+  printf("%s %p\n",task_cpu[id]->name,task_cpu[id]->stack);
   
   for(int i=0;i<handler_sum;i++){
     if(handler[i].event==EVENT_NULL || handler[i].event==ev.event) handler[i].call(ev,ctx);
@@ -131,7 +131,7 @@ static Context *os_trap(Event ev, Context *ctx){
       if(round==NULL) break;
       }
     }
-    if(round!=NULL) printf("the thread %s status is %d\n",round->name,round->status);
+    //if(round!=NULL) printf("the thread %s status is %d\n",round->name,round->status);
     if(round==NULL){task_cpu[id]=&task_boot[id];task_cpu[id]->status=RUNNING;next=task_boot[id].ctx;}
     else{
       assert(round->status == RUNABLE);
