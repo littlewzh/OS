@@ -193,12 +193,13 @@ static Context *pagefault(Event ev,Context *ctx){
             void *pa= kalloc_safe((size_t)as->pgsize);
             int size=((_init_len-i*as->pgsize) > as->pgsize) ? as->pgsize : (_init_len-i*as->pgsize);
             memcpy(pa,(void *)((uintptr_t)_init+i*as->pgsize),size);
-            va=(void *)((uintptr_t)va+as->pgsize);
+            
             task_cpu[cpu_current()]->va[task_cpu[cpu_current()]->np]=va;//(void *)((uintptr_t)va+i*as->pgsize);
             task_cpu[cpu_current()]->pa[task_cpu[cpu_current()]->np]=pa;
             task_cpu[cpu_current()]->np++;
             debug("addr: %p map: %p -> %p\n",ev.ref,pa,va);
             map(as,va,pa,MMAP_READ | MMAP_WRITE); 
+            va=(void *)((uintptr_t)va+as->pgsize);
         }
         
     }
