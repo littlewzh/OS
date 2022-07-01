@@ -188,7 +188,7 @@ static Context *pagefault(Event ev,Context *ctx){
     void *va = (void *)(ev.ref & ~(as->pgsize-1L));
     if(va == as->area.start) {
         
-        int num= (_init_len+as->pgsize-1)/ as->pgsize;   printf("%d\n",num);
+        int num= (_init_len+as->pgsize-1)/ as->pgsize;   //printf("%d\n",num);
         for(int i=0;i<num;i++){
             void *pa= kalloc_safe((size_t)as->pgsize);
             int size=((_init_len-i*as->pgsize) > as->pgsize) ? as->pgsize : (_init_len-i*as->pgsize);
