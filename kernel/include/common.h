@@ -6,6 +6,7 @@
 #define BLOCKED 2
 #define EXIT    3 
 #define WAIT    4
+#define ZOMBIE  5
 #define STACK_SIZE 4096
 //#define LOCAL_MACHINE
 #ifdef LOCAL_MACHINE

@@ -92,7 +92,7 @@ static int uproc_fork(task_t *task){
 static int uproc_wait(task_t *task, int *status){
     int flag=0;
     for(task_t *now=task_head;now!=NULL;now=now->next){
-        if(now->ppid==task->pid && now->status != EXIT){
+        if(now->ppid==task->pid ){
             flag=1;   //have found one
             //while(now->status!=EXIT){
                 //kmt->spin_lock(&traplock);
@@ -102,13 +102,16 @@ static int uproc_wait(task_t *task, int *status){
 
 //            }
             //kmt->spin_lock(&traplock);
-            task->status=WAIT;//BLOCKED;//RUNABLE;
-            task->ret=status;
-            //printf("\n%p\n",status);
-            now->wait=1;
-            //kmt->spin_unlock(&traplock);
-            //if(status != NULL) *status=now->e_staus;
-            break;
+            if(now->status != EXIT){
+                task->status=WAIT;//BLOCKED;//RUNABLE;
+                task->ret=status;
+               //printf("\n%p\n",status);
+                now->wait=1;
+                //kmt->spin_unlock(&traplock);
+                //if(status != NULL) *status=now->e_staus;
+                break;
+            }
+            
         }
     }
     if(flag==0){ //don't find
