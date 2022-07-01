@@ -91,6 +91,7 @@ static int uproc_fork(task_t *task){
 }
 static int uproc_wait(task_t *task, int *status){
     int flag=0;
+    task->ret=NULL;
     for(task_t *now=task_head;now!=NULL;now=now->next){
         if(now->ppid==task->pid && now->status != EXIT){
             flag=1;
@@ -124,6 +125,7 @@ static int uproc_exit(task_t *task, int status){
     //kmt->spin_lock(&traplock);
     task->e_staus=status;
     task->status=ZOMBIE;
+
     if(task->parent->status==WAIT){
         task->status=EXIT;
         task->parent->status=RUNABLE;
