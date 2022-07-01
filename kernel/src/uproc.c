@@ -191,7 +191,8 @@ static Context *pagefault(Event ev,Context *ctx){
         int num= (_init_len+as->pgsize-1)/ as->pgsize;   printf("%d\n",num);
         for(int i=0;i<num;i++){
             void *pa= kalloc_safe((size_t)as->pgsize);
-            memcpy(pa,(void *)((uintptr_t)_init+i*as->pgsize),as->pgsize);
+            int size=((_init_len-i*as->pgsize) > as->pgsize) ? as->pgsize : (_init_len-i*as->pgsize);
+            memcpy(pa,(void *)((uintptr_t)_init+i*as->pgsize),size);
             va=(void *)((uintptr_t)va+as->pgsize);
             task_cpu[cpu_current()]->va[task_cpu[cpu_current()]->np]=va;//(void *)((uintptr_t)va+i*as->pgsize);
             task_cpu[cpu_current()]->pa[task_cpu[cpu_current()]->np]=pa;
