@@ -106,6 +106,10 @@ static int uproc_wait(task_t *task, int *status){
                         }
                     }
                 }
+                for(int i=0;i<now->np;i++){
+                    kfree_safe(now->pa[i]);
+                }
+                kmt->teardown(now);
                 //task->status=WAIT;
                 //task->ret=status;
                 return 0;
@@ -140,6 +144,10 @@ static int uproc_exit(task_t *task, int status){
             //*(task->parent->ret)=status;
             //printf("\n%p\n",task->parent->ret);
         }
+        for(int i=0;i<task->np;i++){
+            kfree_safe(task->pa[i]);
+        }
+        kmt->teardown(task);
     }
     /*if(task->wait){
         task->parent->status=RUNABLE;
