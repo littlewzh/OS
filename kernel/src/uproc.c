@@ -101,12 +101,12 @@ static int uproc_wait(task_t *task, int *status){
                // yield();
 
 //            }
-            kmt->spin_lock(&traplock);
+            //kmt->spin_lock(&traplock);
             task->status=WAIT;//BLOCKED;//RUNABLE;
             task->ret=status;
             //printf("\n%p\n",status);
             now->wait=1;
-            kmt->spin_unlock(&traplock);
+            //kmt->spin_unlock(&traplock);
             //if(status != NULL) *status=now->e_staus;
             break;
         }
@@ -117,7 +117,7 @@ static int uproc_wait(task_t *task, int *status){
     return 0;
 }
 static int uproc_exit(task_t *task, int status){
-    kmt->spin_lock(&traplock);
+    //kmt->spin_lock(&traplock);
     task->e_staus=status;
     task->status=EXIT;
     if(task->wait){
@@ -135,7 +135,7 @@ static int uproc_exit(task_t *task, int status){
         }
         task->parent->ret = NULL;
     }
-    kmt->spin_unlock(&traplock);
+    //kmt->spin_unlock(&traplock);
     //panic("this is the init process which should not exit\n");
     return 0;
 }
