@@ -184,23 +184,32 @@ static void *uproc_alloc(int size){
 static Context *pagefault(Event ev,Context *ctx){
     assert(ev.event==EVENT_PAGEFAULT);
     AddrSpace *as = &(task_cpu[cpu_current()]->as);
-    void *pa = kalloc_safe((size_t)as->pgsize);
+    
     void *va = (void *)(ev.ref & ~(as->pgsize-1L));
-    task_cpu[cpu_current()]->va[task_cpu[cpu_current()]->np]=va;
-    task_cpu[cpu_current()]->pa[task_cpu[cpu_current()]->np]=pa;
-    task_cpu[cpu_current()]->np++;
     if(va == as->area.start) {
-        //printf("loader\n");
-        if(_init_len<=as->pgsize){
-            memcpy(pa,_init,_init_len);
+        
+        int num= (_init_len+as->pgsize-1)/ as->pgsize;   //printf("loader\n");
+        for(int i=0;i<num;i++){
+            void *pa= kalloc_safe((size_t)as->pgsize);
+            memcpy(pa,(void *)((uintptr_t)_init+i*as->pgsize),as->pgsize);
+            va=(void *)((uintptr_t)va+as->pgsize);
+            task_cpu[cpu_current()]->va[task_cpu[cpu_current()]->np]=va;//(void *)((uintptr_t)va+i*as->pgsize);
+            task_cpu[cpu_current()]->pa[task_cpu[cpu_current()]->np]=pa;
+            task_cpu[cpu_current()]->np++;
+            debug("addr: %p map: %p -> %p\n",ev.ref,pa,va);
+            map(as,va,pa,MMAP_READ | MMAP_WRITE); 
         }
-        else{
-            panic("too large _init\n");
-        }
+        
     }
-
-    debug("addr: %p map: %p -> %p\n",ev.ref,pa,va);
-    map(as,va,pa,MMAP_READ | MMAP_WRITE);
+    else{
+        void *pa = kalloc_safe((size_t)as->pgsize);
+        task_cpu[cpu_current()]->va[task_cpu[cpu_current()]->np]=va;
+        task_cpu[cpu_current()]->pa[task_cpu[cpu_current()]->np]=pa;
+        task_cpu[cpu_current()]->np++;
+        debug("addr: %p map: %p -> %p\n",ev.ref,pa,va);
+        map(as,va,pa,MMAP_READ | MMAP_WRITE);  
+    }
+    
     return NULL;
 }
 static Context *syscall(Event ev,Context *ctx){
