@@ -64,17 +64,19 @@ static int uproc_fork(task_t *task){
 
     task_t *child=kalloc_safe(sizeof(task_t));
     uproc_create(child,"ch");
-    child->parent=task;
-    void *cr3=child->ctx->cr3;
+    
     uintptr_t rsp0=child->ctx->rsp0;
     memcpy(child->ctx,task->ctx,sizeof(Context));
     //child->ctx=task->ctx;
+    void *cr3=child->ctx->cr3;
     child->ctx->cr3=cr3;
     child->ctx->rsp0=rsp0;
     
     child->ctx->GPRx=0;
+    child->parent=task;
     child->np=task->np;
     child->ppid=task->pid;
+    
     for(int i=0;i< task->np;i++){
         int sz=task->as.pgsize;
         void *va=task->va[i];
@@ -189,7 +191,12 @@ static Context *pagefault(Event ev,Context *ctx){
     task_cpu[cpu_current()]->np++;
     if(va == as->area.start) {
         //printf("loader\n");
-        memcpy(pa,_init,_init_len);
+        if(_init_len<=as->pgsize){
+            memcpy(pa,_init,_init_len);
+        }
+        else{
+            panic("too large _init\n");
+        }
     }
 
     debug("addr: %p map: %p -> %p\n",ev.ref,pa,va);
