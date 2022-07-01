@@ -92,24 +92,23 @@ static int uproc_fork(task_t *task){
 static int uproc_wait(task_t *task, int *status){
     int flag=0;
     for(task_t *now=task_head;now!=NULL;now=now->next){
-        if(now->ppid==task->pid ){
-            flag=1;   //have found one
-            //while(now->status!=EXIT){
-                //kmt->spin_lock(&traplock);
-              //  task->status=RUNABLE;
-               // kmt->spin_unlock(&traplock);
-               // yield();
-
-//            }
-            //kmt->spin_lock(&traplock);
-            if(now->status != EXIT){
-                task->status=WAIT;//BLOCKED;//RUNABLE;
-                task->ret=status;
-               //printf("\n%p\n",status);
-                now->wait=1;
-                //kmt->spin_unlock(&traplock);
-                //if(status != NULL) *status=now->e_staus;
-                break;
+        if(now->ppid==task->pid && now->status != EXIT){
+            flag=1;
+            if(now->status == ZOMBIE){
+                now->status=EXIT;
+                if(status != NULL){
+                    for(int i=0;i<task->np;i++){
+                        if((uintptr_t)task->va[i]==((uintptr_t)status& ~(task->as.pgsize-1L))){
+                            uintptr_t addr=(uintptr_t)task->pa[i]+(uintptr_t)status-(uintptr_t)task->va[i];
+                            *(int *)addr=now->e_staus;
+                            break;
+                        }
+                    }
+                }
+                //task->status=WAIT;
+                //task->ret=status;
+                return 0;
+            //break;
             }
             
         }
@@ -117,16 +116,19 @@ static int uproc_wait(task_t *task, int *status){
     if(flag==0){ //don't find
         return -1;
     }
+    task->status=WAIT;
+    task->ret=status;
     return 0;
 }
 static int uproc_exit(task_t *task, int status){
     //kmt->spin_lock(&traplock);
     task->e_staus=status;
-    task->status=EXIT;
-    if(task->wait){
+    task->status=ZOMBIE;
+    if(task->parent->status==WAIT){
+        task->status=EXIT;
         task->parent->status=RUNABLE;
         if(task->parent->ret != NULL){
-            for(int i=0;i<task->np;i++){
+            for(int i=0;i<task->parent->np;i++){
                 if((uintptr_t)task->parent->va[i]==((uintptr_t)task->parent->ret& ~(task->parent->as.pgsize-1L))){
                     uintptr_t addr=(uintptr_t)task->parent->pa[i]+(uintptr_t)task->parent->ret-(uintptr_t)task->parent->va[i];
                     *(int *)addr=status;
@@ -136,8 +138,22 @@ static int uproc_exit(task_t *task, int status){
             //*(task->parent->ret)=status;
             //printf("\n%p\n",task->parent->ret);
         }
-        task->parent->ret = NULL;
     }
+    /*if(task->wait){
+        task->parent->status=RUNABLE;
+        if(task->parent->ret != NULL){
+            for(int i=0;i<task->parent->np;i++){
+                if((uintptr_t)task->parent->va[i]==((uintptr_t)task->parent->ret& ~(task->parent->as.pgsize-1L))){
+                    uintptr_t addr=(uintptr_t)task->parent->pa[i]+(uintptr_t)task->parent->ret-(uintptr_t)task->parent->va[i];
+                    *(int *)addr=status;
+                    break;
+                }
+            }
+            *(task->parent->ret)=status;
+            //printf("\n%p\n",task->parent->ret);
+        }
+        task->parent->ret = NULL;
+    }*/
     //kmt->spin_unlock(&traplock);
     //panic("this is the init process which should not exit\n");
     return 0;
