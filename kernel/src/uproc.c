@@ -131,26 +131,31 @@ static int uproc_exit(task_t *task, int status){
     //kmt->spin_lock(&traplock);
     task->e_staus=status;
     task->status=ZOMBIE;
-
-    if(task->parent->status==WAIT){
-        task->status=EXIT;
-        task->parent->status=RUNABLE;
-        if(task->parent->ret != NULL){
-            for(int i=0;i<task->parent->np;i++){
-                if((uintptr_t)task->parent->va[i]==((uintptr_t)task->parent->ret& ~(task->parent->as.pgsize-1L))){
-                    uintptr_t addr=(uintptr_t)task->parent->pa[i]+(uintptr_t)task->parent->ret-(uintptr_t)task->parent->va[i];
-                    *(int *)addr=status;
-                    break;
+    for(task_t *parent=task_head;parent != NULL ;parent=parent->next){
+        if(parent->pid==task->ppid){
+            if(parent->status==WAIT){
+                task->status=EXIT;
+                parent->status=RUNABLE;
+                if(parent->ret != NULL){
+                    for(int i=0;i<parent->np;i++){
+                        if((uintptr_t)parent->va[i]==((uintptr_t)parent->ret& ~(parent->as.pgsize-1L))){
+                            uintptr_t addr=(uintptr_t)parent->pa[i]+(uintptr_t)parent->ret-(uintptr_t)parent->va[i];
+                            *(int *)addr=status;
+                            break;
+                        }
+                    }
+                    //*(task->parent->ret)=status;
+                    //printf("\n%p\n",task->parent->ret);
                 }
+                for(int i=0;i<task->np;i++){
+                    kfree_safe(task->pa[i]);
+                }
+                kmt->teardown(task);
             }
-            //*(task->parent->ret)=status;
-            //printf("\n%p\n",task->parent->ret);
         }
-        for(int i=0;i<task->np;i++){
-            kfree_safe(task->pa[i]);
-        }
-        kmt->teardown(task);
     }
+
+    
     /*if(task->wait){
         task->parent->status=RUNABLE;
         if(task->parent->ret != NULL){
