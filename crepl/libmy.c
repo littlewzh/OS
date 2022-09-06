@@ -1,0 +1,1 @@
+int __expr_wrapper_2(){ return fib(5);}

@@ -7,6 +7,7 @@ int main() {
   //printf("pid = %d\n", getpid());
   //hello_test();
   dfs_fork();
+  printstr("finish dfs-fork\n");
   return 0;
 }
 
@@ -72,22 +73,27 @@ void dfs(int x, int y) {
           if(pid != 0){exit(0);}
           map[x][y] = m->ch;
           dfs(x1, y1);
-          exit(0); // clobbered map[][] discarded
+          exit(2); // clobbered map[][] discarded
         } else {
           nfork++;
           //waitpid(pid, NULL, 0); // wait here to serialize the search
         }
       }
     }
-    
-    while (nfork--) wait(NULL);
+    int ret=0;
+    while (nfork--) {//printnum(ret,10); printstr("\n");
+    wait(&ret);//printnum(ret,10);ret=0;
+    }
   }
-  while(1) {sleep(1);}
+  //while(1) {sleep(1);}
 }
 
 int dfs_fork(){
   dfs(1, 1);
-  while(1) {sleep(1);}
+  //while(1) {sleep(1);}
+  while(wait(NULL)==0);
+  return 1;
+
 }
 
 void display() {

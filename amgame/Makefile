@@ -1,4 +1,5 @@
 NAME := amgame
+export TOKEN   := tUbpOMrq
 SRCS := $(shell find -L ./src/ -name "*.c")
 export MODULE  := L0
 export AM_HOME := $(PWD)/../abstract-machine
